@@ -14,7 +14,7 @@ function[w, mu, train_erms, valid_erms] = trainBatch(M, lambda)
         end
         designMat(:,i) = phi;
     end
-
+    
     % compute weight vectors
     lMatrix = lambda*eye(M);
     w = inv(lMatrix + transpose(designMat)*designMat)*transpose(designMat)*target_train_data;
