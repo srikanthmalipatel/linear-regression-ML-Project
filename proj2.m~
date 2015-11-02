@@ -1,0 +1,46 @@
+UBitName = 'smalipat';
+personNumber = '50169097';
+
+load 'proj2.mat';
+
+%M1 = 10;
+%lambda1 = 2;
+
+%M2 = 4;
+%lambda2 = 1;
+max_m = 10;
+
+valid_per1 =10000;
+
+clearvars w1 mu1 Sigma1 trainPer1 validPer2 trainInd2 validInd2;
+clearvars w2 mu2 Sigma2 trainPer2 validPer2 trainInd2 validInd2;
+
+for i=2:max_m
+    [lambda, Sigma, w, mu, trainPer, validPer] = trainBatch(i);
+    fprintf('M=%d\t%f\t\t%f\n', i, trainPer, validPer);
+    if validPer1 > validPer
+       M1 = i;
+       lambda1 = lambda;
+       Sigma = Sigma1;
+       w1 = w;
+       mu1 = mu;
+       trainPer1 = trainPer;
+       validPer1 = validPer;
+    end
+end
+
+M2 = M1;
+lambda2 = lambda1;
+
+[w2, mu2, Sigma2, trainPer2, validPer2, trainInd2, validInd2] = trainSynBatch(M2, lambda2);
+[w01, dw1, w, eta1] = trainGd(23,0.01);
+
+mu1 = mu1';
+mu2 = mu2';
+
+Sigma1 = zeros(46,46,M1);
+for i=1:M1
+    Sigma1(:,:,i) = var_matrix;
+end
+
+save 'proj2.mat';
